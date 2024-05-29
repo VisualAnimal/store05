@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String?
+  phone     String
+  password  String
+  describe  String?
+  followers Follow[]  @relation("following")
+  following Follow[]  @relation("followers")
+  Product   Product[]
+}
+
+model Follow {
+  id             Int  @id @default(autoincrement())
+  follower       User @relation("followers", fields: [followerId], references: [id])
+  followerId     Int
+  followedUser   User @relation("following", fields: [followedUserId], references: [id])
+  followedUserId Int
+  profit         Int? @default(0)
+}
+
+model Brand {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Model   Model[]
+  Product Product[]
+}
+
+model Model {
+  id       Int        @id @default(autoincrement())
+  name     String
+  Brand    Brand      @relation(fields: [brandId], references: [id])
+  brandId  Int
+  Capacity Capacity[]
+  Color    Color[]
+  Version  Version[]
+  Product  Product[]
+}
+
+model Capacity {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Model   Model     @relation(fields: [modelId], references: [id])
+  modelId Int
+  Product Product[]
+}
+
+model Color {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Model   Model     @relation(fields: [modelId], references: [id])
+  modelId Int
+  Product Product[]
+}
+
+model Version {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Model   Model     @relation(fields: [modelId], references: [id])
+  modelId Int
+  Product Product[]
+}
+
+model Product {
+  id         Int      @id @default(autoincrement())
+  Brand      Brand    @relation(fields: [brandId], references: [id])
+  brandId    Int
+  Model      Model    @relation(fields: [modelId], references: [id])
+  modelId    Int
+  Capacity   Capacity @relation(fields: [capacityId], references: [id])
+  capacityId Int
+  Color      Color    @relation(fields: [colorId], references: [id])
+  colorId    Int
+  Version    Version  @relation(fields: [versionId], references: [id])
+  versionId  Int
+  price      Int
+  describe   String?
+  User       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+}
+
+model Tag {
+  id         Int          @id @default(autoincrement())
+  name       String
+  category   TagCategory? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+}
+
+model TagCategory {
+  id   Int    @id @default(autoincrement())
+  name String
+  tags Tag[]
+}

@@ -182,7 +182,7 @@ app.get('/user/:userId/products', async (req, res) => {
 // 创建用户
 app.post('/user', async (req, res) => {
     const user = await createUser(req.body)
-    res.status(201).json(users)
+    res.status(201).json(user)
 })
 
 // 获取所有用户

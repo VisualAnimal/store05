@@ -7,7 +7,7 @@ const { createCapacity, updateCapacity } = require('./services/capacity');
 const { createColor, updateColor } = require('./services/color');
 const { createVersion, updateVersion } = require('./services/version');
 const { createProduct, updateProduct, getAllProducts, getFollowedUserProducts, } = require('./services/product');
-const { getUsers } = require('./services/user');
+const { getUsers, createUser } = require('./services/user');
 const { deleteFollow, createFollow, updateFollow, getFollows } = require('./services/follow');
 const { createTagCategory, getTagCategory } = require('./services/tagCategory');
 const { createTag, getTag } = require('./services/tag');
@@ -178,6 +178,12 @@ app.get('/user/:userId/products', async (req, res) => {
     //     res.status(500).json({ error: `Failed to fetch products for user with ID ${userId}` });
     // }
 });
+
+// 创建用户
+app.post('/user', async (req, res) => {
+    const user = await createUser(req.body)
+    res.status(201).json(users)
+})
 
 // 获取所有用户
 app.get('/users', async (req, res) => {
